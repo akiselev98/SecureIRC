@@ -8,7 +8,8 @@ def index():
 
 @app.route('/chat')
 def chat():
-    print("Serving chat.", file=sys.stderr)
+    #print("Serving chat.", file=sys.stderr)
+    #print("Serving chat.", file=sys.stdout)
     users = ["akiselev", "cannonhead2", "moot", "Robert\'; DROP TABLE Users;--"]
     return render_template('chat.html', users=users)
 
