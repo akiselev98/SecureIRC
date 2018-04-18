@@ -2,8 +2,9 @@ from secureirc import app, socketio
 
 from flask_socketio import send, emit
 from flask import session
-
+from flaskext.mysql import MySQL
 import sys
+
 
 print('Loaded events', file=sys.stderr)
 

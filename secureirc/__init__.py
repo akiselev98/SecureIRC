@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_socketio import SocketIO
 from flask_session import Session
+from flask.ext.mysql import MySQL
 
 app = Flask(__name__)
+mysql = MySQL(app);
 app.config['SECRET_KEY'] = 'aGVsbG8gZGFya25lc3MgbXkgb2xkIGZyaWVuZAo='
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
