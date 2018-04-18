@@ -10,7 +10,6 @@ socketio = SocketIO(app, manage_session=False)
 app.debug = True
 app.host = '0.0.0.0'
 
-
 if __name__ == "__main__":
     socketio.run(app, log_output=True)
     

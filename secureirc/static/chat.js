@@ -12,14 +12,16 @@ function update_userlist() {
     
 }
 
+var username;
 var socket;
 var myStorage = window.localStorage;
 var key;
+var userlist;
 $(document).ready(function(){
     socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
     socket.on('connect', function() {
 	$('#chat').val('');
-	var username = prompt("Please enter a username.","");
+	username = prompt("Please enter a username.","");
 	if (username != null && username != "") {
 	    myStorage.setItem('username', username);
 	    var PassPhrase = makeid();
@@ -27,7 +29,8 @@ $(document).ready(function(){
 	    var Bits = 1024;
 	    key = cryptico.generateRSAKey(PassPhrase, Bits);
 	    var publicKey = cryptico.publicKeyString(key);
-            socket.emit('joined', {"username": username, "key": publicKey, "id": cryptico.publicKeyID(publicKey)});
+	    var keyid = cryptico.publicKeyID(publicKey);
+            socket.emit('joined', {"username": username, "key": publicKey, "id": keyid});
 	}
 
     });
@@ -36,23 +39,35 @@ $(document).ready(function(){
         $('#chat').scrollTop($('#chat')[0].scrollHeight);
     });
     socket.on('message', function(data) {
-        $('#chat').val($('#chat').val() + data.msg + '\n');
+	var messages = JSON.parse(data.msg);
+	var encryptedMsg = messages[username];
+	var msg = cryptico.decrypt(encryptedMsg, key).plaintext;
+        $('#chat').val($('#chat').val() + msg + '\n');
         $('#chat').scrollTop($('#chat')[0].scrollHeight);
+    });
+    socket.on('userlist_update', function(data) {
+	//console.log(data.toString());
+	userlist = data;
     });
     $('#text').keypress(function(e) {
         var code = e.keyCode || e.which;
         if (code == 13) {
-            text = $('#text').val();
+            text = username + ": " + $('#text').val();
             $('#text').val('');
 	    //var key = JSON.parse(myStorage.getItem('key'));
 	    var Bits = 1024;
 	    var PassPhrase = myStorage.getItem
 	    var publicKey = cryptico.publicKeyString(key);
-	    
-	    var EncryptionResult = cryptico.encrypt(text, publicKey);
-	    console.log(EncryptionResult.cipher);
-	    var encryptedText = EncryptionResult.cipher.toString();
-            socket.emit('text', {msg: text});
+	    var messageManifest = {};
+	    for(var user in userlist){
+		var EncryptionResult = cryptico.encrypt(text, userlist[user]);
+		messageManifest[user] = EncryptionResult.cipher.toString();
+	    }
+	    //var EncryptionResult = cryptico.encrypt(text, publicKey);
+	    //console.log(EncryptionResult.cipher);
+	    //var encryptedText = EncryptionResult.cipher.toString();
+	    var encryptedText = JSON.stringify(messageManifest);
+            socket.emit('text', {msg: encryptedText});
         }
     });
 });
