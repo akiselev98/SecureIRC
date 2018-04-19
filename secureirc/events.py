@@ -26,7 +26,7 @@ def handle_joined(data):
 
 def handle_disconnect():
     print("User Disconnected: " + session['username'], file=sys.stderr)
-    userlist[session['username']] = None
+    del userlist[session['username']]
     emit('userlist_update', userlist, broadcast=True)
     emit('status', {'msg': session['username']+" disconnected."}, broadcast=True)
     

@@ -48,6 +48,14 @@ $(document).ready(function(){
     socket.on('userlist_update', function(data) {
 	//console.log(data.toString());
 	userlist = data;
+	$.ajax({
+	    url: "/userlist",
+	    type: "get",
+	    //data: {jsdata: ""}, //TODO: send room ID
+	    success: function(response) {
+		$("#user-list").html(response);
+	    }
+	});
     });
     $('#text').keypress(function(e) {
         var code = e.keyCode || e.which;

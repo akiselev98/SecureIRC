@@ -8,6 +8,12 @@ import sys
 def index():
     return render_template('index.html')
 
+@app.route('/userlist')
+def userlist():
+    from secureirc.events import userlist # TODO: replace with database voodoo
+    print(userlist.keys(), file=sys.stderr)
+    return render_template('userlist.html', users=userlist.keys())
+
 @app.route('/login')
 def login():
     form = LoginForm()
@@ -21,8 +27,8 @@ def login():
 def chat():
     #print("Serving chat.", file=sys.stderr)
     #print("Serving chat.", file=sys.stdout)
-    users = ["akiselev", "cannonhead2", "moot", "Robert\'; DROP TABLE Users;--"]
-    return render_template('chat.html', users=users)
+    #users = ["akiselev", "cannonhead2", "moot", "Robert\'; DROP TABLE Users;--"]
+    return render_template('chat.html')
 
 @app.route('/keys/<user>')
 def get_key(user):

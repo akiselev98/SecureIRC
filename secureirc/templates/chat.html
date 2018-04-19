@@ -17,12 +17,8 @@
 	  <th scope="col">Users</th>
 	</tr>
       </thead>
-      <tbody>
-	{% for user in users %}
-	<tr class="table-active">
-	  <th scope="row">{{ user|e }}</th>
-	</tr>
-	{% endfor %}
+      <tbody id="user-list">
+	
       </tbody>
     </table>
   </div>
