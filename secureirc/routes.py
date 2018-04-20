@@ -1,16 +1,15 @@
 from secureirc import app
 from flask import Flask, render_template, request
-from flask.ext.mysql import MySQL
 import sys
 
 @app.route('/')
 def index():
     return render_template('index.html')
-@app.route('/validation', methods = ['POST'])
-	name = request.form['name']
-	password = request.form['password']
-	
 
+@app.route('/validation', methods = ['POST'])
+def validation():
+    name = request.form['name']
+    password = request.form['password']
 
 @app.route('/chat')
 def chat():
