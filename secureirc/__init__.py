@@ -1,7 +1,9 @@
 from flask import Flask
 from flask_socketio import SocketIO
 from flask_session import Session
-from config import Config
+#*****You need to make the
+#*****config file in order for this line to actually work
+#from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
