@@ -5,7 +5,7 @@ from flask import session
 import sys
 
 
-print('Loaded events', file=sys.stderr)
+#print("Loaded events", file=sys.stderr)
 
 
 def handle_message(message):

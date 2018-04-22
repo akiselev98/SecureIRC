@@ -25,3 +25,4 @@ if __name__ == "__main__":
 import secureirc.routes
 import secureirc.events
 import secureirc.models
+import secureirc.config

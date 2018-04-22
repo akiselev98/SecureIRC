@@ -5,6 +5,6 @@ setup(
     packages=['secureirc'],
     include_package_data=True,
     install_requires=[
-        'flask', 'flask_socketio', 'flask_session', 'flask_login', 'flask_migrate'
+        'flask', 'flask_socketio', 'flask_session', 'flask_login', 'flask_migrate', 'flask_sqlalchemy'
     ],
 )
