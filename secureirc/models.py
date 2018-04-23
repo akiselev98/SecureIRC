@@ -11,10 +11,12 @@ class User(db.Model):
 #TODO: Add rooms
 #something like room(db.Model) containing user objects
 
-class Room(db.Model)
-	#do not allow duplicate room names
-	roomName = db.Column(db.String(128), primary_key = True, index = True, unique = True)
-	
-
-	def __repr__(self):
-		#TODO
+class Room(db.Model):
+    #do not allow duplicate room names
+    roomName = db.Column(db.String(128), primary_key = True, index = True, unique = True)
+    
+    
+    def __repr__(self):
+	#TODO
+        doNoting = 2 + 2
+        

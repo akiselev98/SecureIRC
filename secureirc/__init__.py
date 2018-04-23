@@ -1,16 +1,16 @@
 from flask import Flask
 from flask_socketio import SocketIO
 from flask_session import Session
-#*****You need to make the
-#*****config file in order for this line to actually work
-#from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
+from secureirc.config import Config
+
 app = Flask(__name__)
+app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app,db)
-from secureirc import routes, models
+
 app.config['SECRET_KEY'] = 'aGVsbG8gZGFya25lc3MgbXkgb2xkIGZyaWVuZAo='
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
@@ -25,4 +25,4 @@ if __name__ == "__main__":
 import secureirc.routes
 import secureirc.events
 import secureirc.models
-import secureirc.config
+
