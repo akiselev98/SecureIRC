@@ -10,7 +10,7 @@ from flask_migrate import Migrate
 app = Flask(__name__)
 db = SQLAlchemy(app)
 migrate = Migrate(app,db)
-
+from secureirc import routes, models
 app.config['SECRET_KEY'] = 'aGVsbG8gZGFya25lc3MgbXkgb2xkIGZyaWVuZAo='
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
