@@ -1,13 +1,27 @@
-from secureirc import db
+from secureirc import db, login
+from flask_login import UserMixin
+from werkzeug.security import check_password_hash, generate_password_hash
 
-class User(db.Model):
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+class User(db.Model, UserMixin):
     __tablename__ = 'credentials'
-    userName = db.Column(db.String(100), primary_key = True, index=True, unique=True)
-    passWord = db.Column(db.String(128))
-    #TODO: Hash passwords
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), index=True, unique=True)
+    password_hash = db.Column(db.String(128))
+
     def __repr__(self):
         return '<User {}>'.format(self.userName)
 
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+        
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+    
+    
 #TODO: Add rooms
 #something like room(db.Model) containing user objects
 
