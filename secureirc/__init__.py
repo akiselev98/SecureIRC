@@ -4,12 +4,13 @@ from flask_session import Session
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-
+from flask_sslify import SSLify
 from secureirc.config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
+sslify = SSLify(app)
 migrate = Migrate(app,db)
 
 app.config['SECRET_KEY'] = 'aGVsbG8gZGFya25lc3MgbXkgb2xkIGZyaWVuZAo='
@@ -26,7 +27,7 @@ Session(app)
 socketio = SocketIO(app, manage_session=False)
 
 if __name__ == "__main__":
-    socketio.run(app, log_output=True)
+    socketio.run(app, log_output=True, ssl_context = ('cert.pem', 'key.pem'))
     
 import secureirc.routes
 import secureirc.events
