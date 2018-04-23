@@ -8,6 +8,8 @@ import sys
 
 #print('Loaded events', file=sys.stderr)
 userlist = {}
+
+
 def handle_message(message):
     print('Got message from ' + session['username'], file=sys.stderr)
     emit('message', {'msg': message['msg']}, broadcast=True)

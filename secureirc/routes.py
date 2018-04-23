@@ -1,6 +1,6 @@
 from secureirc import app
 from secureirc.forms import LoginForm
-from flask import render_template
+from flask import Flask, render_template, request
 
 import sys
 
@@ -22,6 +22,12 @@ def login():
             form.username.data, form.remember_me.data))
         return redirect('/index')
     return render_template('login.html', title='Sign In', form=form)
+
+@app.route('/validation', methods = ['POST'])
+def validation():
+    name = request.form['name']
+    password = request.form['password']
+
 
 @app.route('/chat')
 def chat():
