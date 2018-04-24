@@ -16,6 +16,8 @@ def index():
 @login_required
 def userlist():
     #from secureirc.events import userlist # TODO: replace with database voodoo
+    #This doesn't work. The userlist path needs to return the userlist
+    #template containing all the users in the room.
     list = User.query.order_by(User.username.desc()).all()
 
     print(list.first(), file=sys.stderr)
@@ -64,9 +66,6 @@ def validation():
 @app.route('/chat')
 @login_required
 def chat():
-    #print("Serving chat.", file=sys.stderr)
-    #print("Serving chat.", file=sys.stdout)
-    #users = ["akiselev", "cannonhead2", "moot", "Robert\'; DROP TABLE Users;--"]
     return render_template('chat.html')
 
 @app.route('/chat_script')
@@ -85,7 +84,3 @@ def get_key(user):
   #  	return key
     #from secureirc.events import userlist #I'm being VERY naughty here
     #return userlist[user];
-    
-#@app.route('/chat/<username>')
-#def chat_user(username=username):
-
