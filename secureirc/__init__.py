@@ -16,7 +16,7 @@ login.login_view = 'login'
 
 app.config.from_object(Config)
 db = SQLAlchemy(app)
-#sslify = SSLify(app)
+sslify = SSLify(app)
 migrate = Migrate(app,db)
 
 app.config['SECRET_KEY'] = 'aGVsbG8gZGFya25lc3MgbXkgb2xkIGZyaWVuZAo='
