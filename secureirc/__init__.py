@@ -10,7 +10,10 @@ from flask_sslify import SSLify
 from secureirc.config import Config
 
 app = Flask(__name__)
+
 login = LoginManager(app)
+login.login_view = 'login'
+
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 sslify = SSLify(app)
@@ -23,9 +26,6 @@ app.debug = True
 app.host = '0.0.0.0'
 
 bootstrap = Bootstrap(app)
-#login = LoginManager()
-#login.init_app(app)
-#login.login_view = "login"
 Session(app)
 socketio = SocketIO(app, manage_session=False)
 

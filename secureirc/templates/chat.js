@@ -12,7 +12,7 @@ function update_userlist() {
     
 }
 
-var username;
+var username = "{{ current_user.username }}";
 var socket;
 var myStorage = window.localStorage;
 var key;
@@ -21,17 +21,18 @@ $(document).ready(function(){
     socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
     socket.on('connect', function() {
 	$('#chat').val('');
-	username = prompt("Please enter a username.","");
-	if (username != null && username != "") {
-	    myStorage.setItem('username', username);
-	    var PassPhrase = makeid();
-	    myStorage.setItem('seed', PassPhrase);
-	    var Bits = 1024;
-	    key = cryptico.generateRSAKey(PassPhrase, Bits);
-	    var publicKey = cryptico.publicKeyString(key);
-	    var keyid = cryptico.publicKeyID(publicKey);
-            socket.emit('joined', {"username": username, "key": publicKey, "id": keyid});
-	}
+	//username = prompt("Please enter a username.","");
+	//if (username != null && username != "") {
+	
+	myStorage.setItem('username', username);
+	var PassPhrase = makeid();
+	myStorage.setItem('seed', PassPhrase);
+	var Bits = 1024;
+	key = cryptico.generateRSAKey(PassPhrase, Bits);
+	var publicKey = cryptico.publicKeyString(key);
+	var keyid = cryptico.publicKeyID(publicKey);
+        socket.emit('joined', {"username": username, "key": publicKey, "id": keyid});
+    //}
 
     });
     socket.on('status', function(data) {

@@ -17,16 +17,22 @@
 
 {% endblock %}
 
+{% block navbar %}
+<nav class="navbar navbar-default">
+  <div>
+    IRCrypt:
+    {% if current_user.is_anonymous %}
+    <a href="{{ url_for('login') }}">Login</a>
+    {% else %}
+    <a href="{{ url_for('logout') }}">Logout</a>
+    {% endif %}
+  </div>
+</nav>
+{% endblock %}
+
 {% block content %}
-<div>
-  IRCrypt:
-  {% if current_user.is_anonymous %}
-  <a href="{{ url_for('login') }}">Login</a>
-  {% else %}
-  <a href="{{ url_for('logout') }}">Logout</a>
-  {% endif %}
-</div>
-  {% block app_content %}{% endblock %}
+    
+{% block app_content %}{% endblock %}
 {% endblock %}
 
 {% block scripts %}

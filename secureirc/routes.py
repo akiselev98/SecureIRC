@@ -2,7 +2,7 @@ from secureirc import app, db
 from secureirc.forms import LoginForm, RegistrationForm
 from secureirc.models import User
 from flask import Flask, render_template, request, redirect, url_for
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 
 import sys
 
@@ -11,7 +11,9 @@ import sys
 def index():
     return render_template('index.html')
 
+
 @app.route('/userlist')
+@login_required
 def userlist():
     from secureirc.events import userlist # TODO: replace with database voodoo
     print(userlist.keys(), file=sys.stderr)
@@ -47,6 +49,7 @@ def login():
     return render_template('login.html', title='Sign In', form=form)
 
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
@@ -56,13 +59,18 @@ def validation():
     name = request.form['name']
     password = request.form['password']
 
-
 @app.route('/chat')
+@login_required
 def chat():
     #print("Serving chat.", file=sys.stderr)
     #print("Serving chat.", file=sys.stdout)
     #users = ["akiselev", "cannonhead2", "moot", "Robert\'; DROP TABLE Users;--"]
     return render_template('chat.html')
+
+@app.route('/chat_script')
+@login_required
+def chat_script():
+    return render_template('chat.js')
 
 @app.route('/keys/<user>')
 def get_key(user):
@@ -71,4 +79,4 @@ def get_key(user):
     
 #@app.route('/chat/<username>')
 #def chat_user(username=username):
-    
+
