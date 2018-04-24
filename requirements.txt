@@ -28,6 +28,7 @@ requests==2.18.4
 -e git+https://github.com/akiselev98/SecureIRC.git@8552c374f81e9cea6b29601d5df72e326cedf842#egg=SecureIRC
 six==1.11.0
 SQLAlchemy==1.2.7
+pymysql==0.8.0
 urllib3==1.22
 visitor==0.1.3
 Werkzeug==0.14.1
