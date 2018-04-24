@@ -5,4 +5,5 @@ class Config(object):
     # ...
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
                               'sqlite:///' + os.path.join(basedir, 'app.db')
+   # SQLALCHEMY_DATABASE_URI='mysql+pymysql://root:1234@localhost:8324/data'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
