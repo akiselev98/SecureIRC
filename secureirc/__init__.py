@@ -16,7 +16,7 @@ login.login_view = 'login'
 
 app.config.from_object(Config)
 db = SQLAlchemy(app)
-sslify = SSLify(app)
+#sslify = SSLify(app)
 migrate = Migrate(app,db)
 
 app.config['SECRET_KEY'] = 'aGVsbG8gZGFya25lc3MgbXkgb2xkIGZyaWVuZAo='
@@ -28,9 +28,10 @@ app.host = '0.0.0.0'
 bootstrap = Bootstrap(app)
 Session(app)
 socketio = SocketIO(app, manage_session=False)
+socketio.init_app(app, log_output=True)
 
 if __name__ == "__main__":
-    socketio.run(app, log_output=True, ssl_context = ('cert.pem', 'key.pem'))
+    app.run(ssl_context=('cert.pem', 'key.pem'))
     
 import secureirc.routes
 import secureirc.events
