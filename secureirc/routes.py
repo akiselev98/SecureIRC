@@ -15,9 +15,11 @@ def index():
 @app.route('/userlist')
 @login_required
 def userlist():
-    from secureirc.events import userlist # TODO: replace with database voodoo
-    print(userlist.keys(), file=sys.stderr)
-    return render_template('userlist.html', users=userlist.keys())
+    #from secureirc.events import userlist # TODO: replace with database voodoo
+    list = User.query.order_by(User.username.desc()).all()
+
+    print(list.first(), file=sys.stderr)
+    return render_template('userlist.html', users=list.first())
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -75,11 +77,12 @@ def chat_script():
 @app.route('/keys/<user>')
 def get_key(user):
     key = User.query.filter_by(username=user).first().publickey
-    if (key is None):
-	return None 
+
+ #   if (key is None):
+#	return None 
     #TODO: Handle the key being empty
-    else:
-    return key
+ #   else:
+  #  	return key
     #from secureirc.events import userlist #I'm being VERY naughty here
     #return userlist[user];
     

@@ -23,14 +23,13 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password)
     
     
-#TODO: Add rooms
-#something like room(db.Model) containing user objects
+
 
 class Room(db.Model):
+    __tablename__ = 'rooms'
     #do not allow duplicate room names
     roomName = db.Column(db.String(128), primary_key = True, index = True, unique = True)
-    
+    keyset = db.Column(db.String(256))
+   
     def __repr__(self):
-	#TODO
-        doNoting = 2 + 2
-        
+        return '<Room ()>'.format(self.roomName)
