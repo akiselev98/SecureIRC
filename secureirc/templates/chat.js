@@ -18,7 +18,7 @@ var myStorage = window.localStorage;
 var key;
 var userlist;
 $(document).ready(function(){
-    socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+    socket = io.connect('https://' + document.domain + ':' + location.port + '/chat');
     socket.on('connect', function() {
 	$('#chat').val('');
 	//username = prompt("Please enter a username.","");
