@@ -7,11 +7,12 @@ def load_user(id):
     return User.query.get(int(id))
 
 class User(db.Model, UserMixin):
-    __tablename__ = 'credentials'
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-
+    publickey = db.Column(db.String(256))
+                              
     def __repr__(self):
         return '<User {}>'.format(self.userName)
 
@@ -28,7 +29,6 @@ class User(db.Model, UserMixin):
 class Room(db.Model):
     #do not allow duplicate room names
     roomName = db.Column(db.String(128), primary_key = True, index = True, unique = True)
-    
     
     def __repr__(self):
 	#TODO

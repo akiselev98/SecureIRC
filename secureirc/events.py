@@ -22,6 +22,7 @@ def handle_joined(data):
           + "(ID:"+data['id']+")",
           file=sys.stderr)
     userlist[current_user.username] = data['key']
+    current_user.publickey = data['key']
     emit('status', {'msg': "User joined: " + current_user.username + " (ID:"+data['id']+")"}, broadcast=True)
     #emit('status', {'msg': str(userlist)}, broadcast=True)
     emit('userlist_update', userlist, broadcast=True)
@@ -29,6 +30,7 @@ def handle_joined(data):
 
 def handle_disconnect():
     print("User Disconnected: " + session['username'], file=sys.stderr)
+    current_user.publickey = ""
     del userlist[current_user.username]
     emit('userlist_update', userlist, broadcast=True)
     emit('status', {'msg': current_user.username+" disconnected."}, broadcast=True)

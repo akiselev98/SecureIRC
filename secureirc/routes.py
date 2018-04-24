@@ -74,8 +74,11 @@ def chat_script():
 
 @app.route('/keys/<user>')
 def get_key(user):
-    from secureirc.events import userlist #I'm being VERY naughty here
-    return userlist[user];
+    key = User.query.filter_by(username=user).first().publickey
+    #TODO: Handle the key being empty
+    return key
+    #from secureirc.events import userlist #I'm being VERY naughty here
+    #return userlist[user];
     
 #@app.route('/chat/<username>')
 #def chat_user(username=username):
