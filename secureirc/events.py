@@ -27,9 +27,9 @@ def handle_joined(data):
     emit('status', {'msg': "User joined: " + current_user.username + " (ID:"+data['id']+")"}, broadcast=True)
     #emit('status', {'msg': str(userlist)}, broadcast=True)
     emit('userlist_update', userlist, broadcast=True)
-    u = User(id = data['id'], username = current_user.username, password_hash = 'test', publickey = data['key'])
-    db.session.add(u)
-    db.session.commit()
+    #u = User(id = data['id'], username = current_user.username, password_hash = 'test', publickey = data['key'])
+    #db.session.add(u)
+    #db.session.commit()
     #TODO: Add user and publickey to database.
 
 def handle_disconnect():
