@@ -30,8 +30,12 @@ def create_room():
     form = RoomCreationForm()
     if form.validate_on_submit():
         if form.roomname.data is None:
-            
-
+            #BLAH
+            x = 2+2 #is 4
+            x = x-1 #that's 3 quik maths
+	    return render_template("createroom.html", form=form)
+        
+        
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
