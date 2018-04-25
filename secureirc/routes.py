@@ -29,7 +29,9 @@ def userlist(roomname):
 @app.route('/roomlist')
 @login_required
 def roomlist():
-    pass #TODO: return list of rooms that have public==True
+    room_list = Room.query.filter_by(public=True)
+    return render_template('roomlist.html', rooms=room_list)
+
 
 @app.route('/createroom', methods=['GET', 'POST'])
 @login_required
