@@ -38,11 +38,10 @@ def create_room():
     form = RoomCreationForm()
     if form.validate_on_submit():
         rname = ""
-        if form.roomname.data is None:
+        if form.roomname.data is "":
             rname = id_generator()
-            tempquery = Room.query.filter_by(roomname=rname)
             #checks for collision
-	    if tempquery is Not None:
+            if Room.query.filter_by(roomname=rname).first() is not None:
                 rname = id_generator()
         else:
             rname = form.roomname.data
@@ -52,7 +51,7 @@ def create_room():
         room.users.append(current_user)
         db.session.add(room)
         db.session.commit()
-        return redirect(url_for(rname+'/chat'))
+        return redirect('/'+rname+'/chat')
     return render_template("createroom.html", form=form)
 
 @app.route('/<roomname>/chat')
@@ -61,8 +60,8 @@ def chat_room(roomname):
     room = Room.query.filter_by(roomname=roomname).first()
     if room is None:
         abort(404)
-    room.users.append(current_user)
-    
+        room.users.append(current_user)
+        
     db.session.commit()
     return render_template('chat.html', room=roomname)
 
@@ -128,10 +127,10 @@ def chat_script_room(room):
 def get_key(user):
     key = User.query.filter_by(username=user).first().publickey
     return key
- #   if (key is None):
- #      return None 
- #TODO: Handle the key being empty
- #   else:
- #      return key
- #from secureirc.events import userlist #I'm being VERY naughty here
- #return userlist[user];
+#   if (key is None):
+#      return None 
+#TODO: Handle the key being empty
+#   else:
+#      return key
+#from secureirc.events import userlist #I'm being VERY naughty here
+#return userlist[user];
