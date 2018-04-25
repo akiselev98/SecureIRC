@@ -40,6 +40,7 @@ $(document).ready(function(){
         $('#chat').scrollTop($('#chat')[0].scrollHeight);
     });
     socket.on('message', function(data) {
+	console.log(data.msg);
 	var messages = JSON.parse(data.msg);
 	var encryptedMsg = messages[username];
 	var msg = cryptico.decrypt(encryptedMsg, key).plaintext;
@@ -50,7 +51,7 @@ $(document).ready(function(){
 	//console.log(data.toString());
 	userlist = data;
 	$.ajax({
-	    url: "/userlist",
+	    url: "/{{ roomname }}/userlist",
 	    type: "get",
 	    //data: {jsdata: ""}, //TODO: send room ID
 	    success: function(response) {

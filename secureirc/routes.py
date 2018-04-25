@@ -1,7 +1,7 @@
 from secureirc import app, db
 from secureirc.forms import LoginForm, RegistrationForm, RoomCreationForm
 from secureirc.models import User, Room
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from flask_login import current_user, login_user, logout_user, login_required
 
 import sys
@@ -14,17 +14,22 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
 
 @app.route('/')
 @app.route('/index')
+@login_required
 def index():
     return render_template('index.html')
 
 
-@app.route('/userlist')
+@app.route('/<roomname>/userlist')
 @login_required
 def userlist(roomname):
-    list = Room.query.filter_by(roomname=roomname).first.users
-    print(list, file=sys.stderr)
-    return render_template('userlist.html', users=list)
+    user_list = Room.query.filter_by(roomname=roomname).first().users
+    print(user_list, file=sys.stderr)
+    return render_template('userlist.html', users=user_list)
 
+@app.route('/roomlist')
+@login_required
+def roomlist():
+    pass #TODO: return list of rooms that have public==True
 
 @app.route('/createroom', methods=['GET', 'POST'])
 @login_required
@@ -33,14 +38,26 @@ def create_room():
     if form.validate_on_submit():
         rname = ""
         if form.roomname.data is None:
-            rname = id_generator()#TODO: 
+            rname = id_generator()#TODO: make sure randomly generated name is not already a room
         else:
             rname = form.roomname.data
             
         room = Room(roomname=rname, public=form.pub_listed.data)
         db.session.add(room)
         db.session.commit()
+        return redirect(url_for(rname+'/chat'))
     return render_template("createroom.html", form=form)
+
+@app.route('/<roomname>/chat')
+@login_required
+def chat_room(roomname):
+    room = Room.query.filter_by(roomname=roomname).first()
+    if room is None:
+        abort(404)
+    room.users.append(current_user)
+    
+    db.session.commit()
+    return render_template('chat.html', room=roomname)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -77,7 +94,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 @app.route('/validation', methods = ['POST'])
 def validation():
@@ -94,10 +111,16 @@ def chat():
 def chat_script():
     return render_template('chat.js')
 
+@app.route('/<room>/chat_script')
+@login_required
+def chat_script_room(room):
+    return render_template('chat.js', roomname=room)
+
+
 @app.route('/keys/<user>')
 def get_key(user):
     key = User.query.filter_by(username=user).first().publickey
-
+    return key
  #   if (key is None):
  #      return None 
  #TODO: Handle the key being empty

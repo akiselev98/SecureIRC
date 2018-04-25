@@ -12,7 +12,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(100), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     publickey = db.Column(db.String(256))
-    room = db.Column(db.Integer, db.ForeignKey('room.id'))
+    room_id = db.Column(db.Integer, db.ForeignKey('room.id'))
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
@@ -28,7 +28,7 @@ class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True, index = True)
     #do not allow duplicate room names
     roomname = db.Column(db.String(32), index = True)
-    users = db.relationship('User', backref='Room', lazy=True)
+    users = db.relationship('User', backref='room', lazy=True)
     password_hash = db.Column(db.String(128))
     public = db.Column(db.Boolean)
     

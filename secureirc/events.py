@@ -1,6 +1,6 @@
 from secureirc import app, socketio
 
-from flask_socketio import send, emit
+from flask_socketio import send, emit, join_room, leave_room
 from flask_login import current_user
 from flask import session
 from secureirc import db
@@ -9,12 +9,12 @@ import json
 import sys
 
 #print('Loaded events', file=sys.stderr)
-userlist = {}
+#userlist = {}
 
 
 def handle_message(message):
-    print('Got message from ' + current_user.username, file=sys.stderr)
-    emit('message', {'msg': message['msg']}, broadcast=True)
+    print('Got message from ' + current_user.username + ":" + message['msg'], file=sys.stderr)
+    emit('message', {'msg': message['msg']}, room=current_user.room.roomname)
 
 def handle_joined(data):
     #session['username'] = data['username']
@@ -22,22 +22,34 @@ def handle_joined(data):
           + current_user.username
           + "(ID:"+data['id']+")",
           file=sys.stderr)
-    userlist[current_user.username] = data['key']
+    #userlist[current_user.username] = data['key']
+    join_room(current_user.room.roomname)
     current_user.publickey = data['key']
-    emit('status', {'msg': "User joined: " + current_user.username + " (ID:"+data['id']+")"}, broadcast=True)
+    db.session.commit()
+    emit('status', {'msg': "User joined: " + current_user.username + " (ID:"+data['id']+")"},
+         room=current_user.room.roomname)
     #emit('status', {'msg': str(userlist)}, broadcast=True)
-    emit('userlist_update', userlist, broadcast=True)
-    #u = User(id = data['id'], username = current_user.username, password_hash = 'test', publickey = data['key'])
-    #db.session.add(u)
-    #db.session.commit()
-    #TODO: Add user and publickey to database.
+    userlist = {user.username : user.publickey for user in current_user.room.users}
+    emit('userlist_update', userlist, room=current_user.room.roomname)
 
 def handle_disconnect():
-    print("User Disconnected: " + session['username'], file=sys.stderr)
+    print("User Disconnected: " + current_user.username, file=sys.stderr)
+    users = current_user.room.users
+    current_user.room.users.remove(current_user)
+    users.remove(current_user)
+    db.session.commit()
+    userlist = {user.username : user.publickey for user in users}
+    
+    emit('userlist_update', userlist,
+         room=current_user.room)
+    emit('status', {'msg': current_user.username+" disconnected."},
+         room=current_user.room.roomname)
+    
+    #TODO: remove user from room record
+    leave_room(current_user.room.roomname)
     current_user.publickey = ""
-    del userlist[current_user.username]
-    emit('userlist_update', userlist, broadcast=True)
-    emit('status', {'msg': current_user.username+" disconnected."}, broadcast=True)
+    db.session.commit()
+    
     
 socketio.on_event('text', handle_message, namespace='/chat')
 socketio.on_event('joined', handle_joined, namespace='/chat')

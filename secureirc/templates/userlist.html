@@ -1,5 +1,5 @@
 {% for user in users %}
 <tr class="table-active">
-  <th scope="row">{{ user|e }}</th>
+  <th scope="row">{{ user.username|e }}</th>
 </tr>
 {% endfor %}
