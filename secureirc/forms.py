@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, EqualTo
 from secureirc.models import User,Room
+import sys
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -17,6 +18,7 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
     def validate_username(self, username):
+        print("Validating username.", file=sys.stderr)
         user = User.query.filter_by(username=username.data).first()
         if user is not None:
             raise ValidationError('Invalid username.')
@@ -27,6 +29,7 @@ class RoomCreationForm(FlaskForm):
     submit = SubmitField('Create Room')
     
     def validate_roomname(self, roomname):
+        
         room = Room.query.filter_by(roomname=roomname.data).first()
         if room is not None:
             raise ValidationError('Invalid roomname.')

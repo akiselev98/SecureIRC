@@ -1,7 +1,7 @@
 from secureirc import app, db
 from secureirc.forms import LoginForm, RegistrationForm, RoomCreationForm
 from secureirc.models import User, Room
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_user, logout_user, login_required
 
 import sys
@@ -56,6 +56,7 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
+        flash('Successfully created user.', 'success')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -68,7 +69,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if (user is None) or (not user.check_password(form.password.data)):
-            #flash('Invalid username/password')
+            flash('Invalid username/password', 'danger')
             return redirect(url_for('login'))
         
         login_user(user, remember=form.remember_me.data)
@@ -85,7 +86,7 @@ def logout():
 def validation():
     name = request.form['name']
     password = request.form['password']
-
+    
 @app.route('/chat')
 @login_required
 def chat():
