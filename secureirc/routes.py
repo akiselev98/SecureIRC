@@ -41,8 +41,10 @@ def create_room():
             rname = id_generator()#TODO: make sure randomly generated name is not already a room
         else:
             rname = form.roomname.data
-            
+
         room = Room(roomname=rname, public=form.pub_listed.data)
+        room.set_password(form.password.data)
+        room.users.append(current_user)
         db.session.add(room)
         db.session.commit()
         return redirect(url_for(rname+'/chat'))
