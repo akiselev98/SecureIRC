@@ -7,12 +7,12 @@ def load_user(id):
     return User.query.get(int(id))
 
 class User(db.Model, UserMixin):
-    __tablename__ = 'users'
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     publickey = db.Column(db.String(256))
-                              
+    room = db.Column(db.Integer, db.ForeignKey('room.id'))
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
@@ -23,13 +23,15 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password)
     
     
-
-
+    
+    
 class Room(db.Model):
-    __tablename__ = 'rooms'
+    __tablename__ = 'room'
+    id = db.Column(db.Integer, primary_key=True, unique=True, index = True)
     #do not allow duplicate room names
-    roomName = db.Column(db.String(128), primary_key = True, index = True, unique = True)
-    keyset = db.Column(db.String(256))
-   
+    roomName = db.Column(db.String(32), index = True)
+    users = db.relationship('users', backref='rooms', lazy=True)
+    
+    
     def __repr__(self):
         return '<Room ()>'.format(self.roomName)

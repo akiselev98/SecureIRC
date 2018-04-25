@@ -23,6 +23,15 @@ def userlist():
     print(list.first(), file=sys.stderr)
     return render_template('userlist.html', users=list.first())
 
+"""
+@app.route('/createroom', methods=['GET', 'POST'])
+@login_required
+def create_room():
+    form = RoomCreationForm()
+    if form.validate_on_submit():
+        if form.roomname.data is None:
+   """         
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:

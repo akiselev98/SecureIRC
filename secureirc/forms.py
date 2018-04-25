@@ -20,3 +20,13 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(username=username.data).first()
         if user is not None:
             raise ValidationError('Invalid username.')
+
+class RoomCreationForm(FlaskForm):
+    roomname = StringField('Room Name')
+    pub_listed = BooleanField('List Publicly')
+    submit = SubmitField('Create Room')
+    
+    def validate_roomname(self, roomname):
+        user = User.query.filter_by(username=username.data).first()
+        if user is not None:
+            raise ValidationError('Invalid username.')
