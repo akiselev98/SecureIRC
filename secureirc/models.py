@@ -21,9 +21,7 @@ class User(db.Model, UserMixin):
         
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-    
-    
-    
+
     
 class Room(db.Model):
     __tablename__ = 'room'
@@ -31,7 +29,8 @@ class Room(db.Model):
     #do not allow duplicate room names
     roomname = db.Column(db.String(32), index = True)
     users = db.relationship('User', backref='Room', lazy=True)
-    password_hash = db.Column(db.String(128))    
+    password_hash = db.Column(db.String(128))
+    public = db.Column(db.Boolean)
     
     def __repr__(self):
         return '<Room ()>'.format(self.roomName)

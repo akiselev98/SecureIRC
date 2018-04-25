@@ -31,21 +31,18 @@ def userlist(roomname):
 def create_room():
     form = RoomCreationForm()
     if form.validate_on_submit():
+        rname = ""
         if form.roomname.data is None:
-            rname = id_generator()
-            room = Room(roomname=rname)
-            db.session.add(room)
-            db.commit()
-            
+            rname = id_generator()#TODO: 
         else:
             rname = form.roomname.data
-            room = Room(roomname=rname)
-            db.session.add(room)
-            db.session.commit()
-    else:
-        x=2+2
+            
+        room = Room(roomname=rname, public=form.pub_listed.data)
+        db.session.add(room)
+        db.session.commit()
     return render_template("createroom.html", form=form)
- 
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
