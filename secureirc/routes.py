@@ -20,14 +20,10 @@ def index():
 
 @app.route('/userlist')
 @login_required
-def userlist():
-    #from secureirc.events import userlist # TODO: replace with database voodoo
-    #This doesn't work. The userlist path needs to return the userlist
-    #template containing all the users in the room.
-    list = User.query.order_by(User.username.desc()).all()
-
-    print(list.first(), file=sys.stderr)
-    return render_template('userlist.html', users=list.first())
+def userlist(roomname):
+    list = Room.query.filter_by(roomname=roomname).first.users
+    print(list, file=sys.stderr)
+    return render_template('userlist.html', users=list)
 
 
 @app.route('/createroom', methods=['GET', 'POST'])
