@@ -45,7 +45,7 @@ def create_room():
             rname = form.roomname.data
             room = Room(roomname=rname)
             db.session.add(room)
-            db.commit()
+            db.session.commit()
     else:
         x=2+2
     return render_template("createroom.html", form=form)
