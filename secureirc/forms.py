@@ -27,7 +27,9 @@ class RoomCreationForm(FlaskForm):
     roomname = StringField('Room Name')
     pub_listed = BooleanField('List Publicly')
     submit = SubmitField('Create Room')
-    
+    password = PasswordField('Enter password')
+    password2 = PasswordField(
+        'Repeat Password', validators=[DataRequired(), EqualTo('password')]) 
     def validate_roomname(self, roomname):
         
         room = Room.query.filter_by(roomname=roomname.data).first()

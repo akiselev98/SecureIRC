@@ -32,7 +32,6 @@ def roomlist():
     room_list = Room.query.filter_by(public=True)
     return render_template('roomlist.html', rooms=room_list)
 
-
 @app.route('/createroom', methods=['GET', 'POST'])
 @login_required
 def create_room():
@@ -40,11 +39,17 @@ def create_room():
     if form.validate_on_submit():
         rname = ""
         if form.roomname.data is None:
-            rname = id_generator()#TODO: make sure randomly generated name is not already a room
+            rname = id_generator()
+            tempquery = Room.query.filter_by(roomname=rname)
+            #checks for collision
+	    if tempquery is Not None:
+                rname = id_generator()
         else:
             rname = form.roomname.data
-            
+
         room = Room(roomname=rname, public=form.pub_listed.data)
+        room.set_password(form.password.data)
+        room.users.append(current_user)
         db.session.add(room)
         db.session.commit()
         return redirect(url_for(rname+'/chat'))

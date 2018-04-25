@@ -45,7 +45,8 @@ def handle_disconnect():
     emit('status', {'msg': current_user.username+" disconnected."},
          room=current_user.room.roomname)
     
-    #TODO: remove user from room record
+    
+
     leave_room(current_user.room.roomname)
     current_user.publickey = ""
     db.session.commit()
