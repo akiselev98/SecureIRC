@@ -5,6 +5,12 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 
 import sys
+import string
+import random
+
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 @app.route('/')
 @app.route('/index')
@@ -30,11 +36,19 @@ def create_room():
     form = RoomCreationForm()
     if form.validate_on_submit():
         if form.roomname.data is None:
-            #BLAH
-            x = 2+2 #is 4
-            x = x-1 #that's 3 quik maths
-	    return render_template("createroom.html", form=form)
-        
+           rname = id_generator()
+	   room = Room(roomname=rname)
+	   db.session.add(room)
+	   db.commit()
+	   return render_template("createroom.html", form=form)
+        else:
+	   rname = form.roomname.data
+	   room = Room(roomname=rname)
+	   db.session.add(room)
+	   db.commit()
+    else:
+	 return None
+
         
 @app.route('/register', methods=['GET', 'POST'])
 def register():
