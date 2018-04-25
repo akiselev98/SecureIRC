@@ -1,6 +1,6 @@
 from secureirc import app, db
 from secureirc.forms import LoginForm, RegistrationForm, RoomCreationForm
-from secureirc.models import User
+from secureirc.models import User, Room
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -36,20 +36,20 @@ def create_room():
     form = RoomCreationForm()
     if form.validate_on_submit():
         if form.roomname.data is None:
-           rname = id_generator()
-	   room = Room(roomname=rname)
-	   db.session.add(room)
-	   db.commit()
-	   return render_template("createroom.html", form=form)
+            rname = id_generator()
+            room = Room(roomname=rname)
+            db.session.add(room)
+            db.commit()
+            
         else:
-	   rname = form.roomname.data
-	   room = Room(roomname=rname)
-	   db.session.add(room)
-	   db.commit()
+            rname = form.roomname.data
+            room = Room(roomname=rname)
+            db.session.add(room)
+            db.commit()
     else:
-	 return None
-
-        
+        x=2+2
+    return render_template("createroom.html", form=form)
+ 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -105,9 +105,9 @@ def get_key(user):
     key = User.query.filter_by(username=user).first().publickey
 
  #   if (key is None):
-#	return None 
-    #TODO: Handle the key being empty
+ #      return None 
+ #TODO: Handle the key being empty
  #   else:
-  #  	return key
-    #from secureirc.events import userlist #I'm being VERY naughty here
-    #return userlist[user];
+ #      return key
+ #from secureirc.events import userlist #I'm being VERY naughty here
+ #return userlist[user];
