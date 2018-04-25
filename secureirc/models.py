@@ -29,7 +29,7 @@ class Room(db.Model):
     __tablename__ = 'room'
     id = db.Column(db.Integer, primary_key=True, unique=True, index = True)
     #do not allow duplicate room names
-    roomName = db.Column(db.String(32), index = True)
+    roomname = db.Column(db.String(32), index = True)
     users = db.relationship('User', backref='Room', lazy=True)
     
     
