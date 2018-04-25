@@ -1,5 +1,5 @@
 from secureirc import app, db
-from secureirc.forms import LoginForm, RegistrationForm
+from secureirc.forms import LoginForm, RegistrationForm, RoomCreationForm
 from secureirc.models import User
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
@@ -52,7 +52,7 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if(current_user.is_authenticated):
-        return redirect(url_for('/'))
+        return redirect(url_for('index'))
     
     form = LoginForm()
     if form.validate_on_submit():
