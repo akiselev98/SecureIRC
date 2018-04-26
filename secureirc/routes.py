@@ -47,7 +47,7 @@ def create_room():
             rname = form.roomname.data
 
         room = Room(roomname=rname, public=form.pub_listed.data)
-            if form.password.data is not "":
+        if form.password.data is not "":
             room.set_password(form.password.data)
 
         room.users.append(current_user)
@@ -62,8 +62,7 @@ def chat_room(roomname):
     room = Room.query.filter_by(roomname=roomname).first()
     if room is None:
         abort(404)
-        room.users.append(current_user)
-        
+    room.users.append(current_user)    
     db.session.commit()
     return render_template('chat.html', room=roomname)
 

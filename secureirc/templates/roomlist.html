@@ -1,5 +1,6 @@
 {% for room in rooms %}
 <tr class="table-active">
-  <th scope="row">{{ room.roomname }}</th>
+  <th scope="row" ><a href="{{ room.roomname }}/chat">{{ room.roomname }}</a>    {% if room.password_hash != None %}<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>{% endif %}</th>
+  
 </tr>
 {% endfor %}

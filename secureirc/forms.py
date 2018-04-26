@@ -25,9 +25,9 @@ class RegistrationForm(FlaskForm):
 
 class RoomCreationForm(FlaskForm):
     roomname = StringField('Room Name')
+    password = PasswordField('Password (Optional)')
+    password2 = PasswordField('Repeat Password', validators=[EqualTo('password')])
     pub_listed = BooleanField('List Publicly')
-    password = PasswordField('Enter password')
-    password2 = PasswordField('Repeat Password', validators=[EqualTo('password')]) 
     submit = SubmitField('Create Room')
         
     def validate_roomname(self, roomname):      

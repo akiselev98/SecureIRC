@@ -34,23 +34,20 @@ def handle_joined(data):
 
 def handle_disconnect():
     print("User Disconnected: " + current_user.username, file=sys.stderr)
-    users = current_user.room.users
+    room = current_user.room
     current_user.room.users.remove(current_user)
-    users.remove(current_user)
-    db.session.commit()
-    userlist = {user.username : user.publickey for user in users}
-    
-    emit('userlist_update', userlist,
-         room=current_user.room)
-    emit('status', {'msg': current_user.username+" disconnected."},
-         room=current_user.room.roomname)
-    
-    
-
-    leave_room(current_user.room.roomname)
     current_user.publickey = ""
     db.session.commit()
-    
+    userlist = {user.username : user.publickey for user in room.users}
+    emit('userlist_update', userlist,
+         room=room.roomname)
+    emit('status', {'msg': current_user.username+" disconnected."},
+         room=room.roomname)
+    leave_room(room.roomname)
+    if len(room.users) == 0:
+        print("Deleting room", file=sys.stderr)
+        db.session.delete(room)
+        db.session.commit()
     
 socketio.on_event('text', handle_message, namespace='/chat')
 socketio.on_event('joined', handle_joined, namespace='/chat')
