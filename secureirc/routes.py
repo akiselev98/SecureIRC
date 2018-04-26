@@ -1,5 +1,5 @@
 from secureirc import app, db
-from secureirc.forms import LoginForm, RegistrationForm, RoomCreationForm
+from secureirc.forms import LoginForm, RegistrationForm, RoomCreationForm, PasswordForm
 from secureirc.models import User, Room
 from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from flask_login import current_user, login_user, logout_user, login_required
@@ -56,18 +56,31 @@ def create_room():
         return redirect('/'+rname+'/chat')
     return render_template("createroom.html", form=form)
 
-@app.route('/<roomname>/chat')
+@app.route('/<roomname>/chat', methods=['GET', 'POST'])
 @login_required
 def chat_room(roomname):
     room = Room.query.filter_by(roomname=roomname).first()
     if room is None:
         abort(404)
-    if room.password_hash is not None:
+    
+    if current_user in room.users:
+        return render_template('chat.html', room=roomname)
+    if room.password_hash is None:
         room.users.append(current_user)    
         db.session.commit()
-    else:
-        return render_template('passwordprompt.html', room=roomname)
-    return render_template('chat.html', room=roomname)
+        return render_template('chat.html', room=roomname)
+
+    form = PasswordForm()
+    if form.validate_on_submit():
+        if room.check_password(form.password.data):
+            room.users.append(current_user)
+            db.session.commit()
+            return render_template('chat.html', room=roomname)
+        else:
+            flash("Invalid password", 'danger')
+
+    return render_template('passwordprompt.html', form=form)
+    
 
 
 @app.route('/register', methods=['GET', 'POST'])

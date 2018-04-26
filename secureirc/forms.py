@@ -34,3 +34,7 @@ class RoomCreationForm(FlaskForm):
         room = Room.query.filter_by(roomname=roomname.data).first()
         if room is not None:
             raise ValidationError('Invalid roomname.')
+
+class PasswordForm(FlaskForm):
+    password = PasswordField('Room Password')
+    submit = SubmitField('Enter Room')
