@@ -62,8 +62,11 @@ def chat_room(roomname):
     room = Room.query.filter_by(roomname=roomname).first()
     if room is None:
         abort(404)
-    room.users.append(current_user)    
-    db.session.commit()
+    if room.password_hash is not None:
+        room.users.append(current_user)    
+        db.session.commit()
+    else:
+        return render_template('passwordprompt.html', room=roomname)
     return render_template('chat.html', room=roomname)
 
 
