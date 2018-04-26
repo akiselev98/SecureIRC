@@ -47,7 +47,7 @@ def create_room():
             rname = form.roomname.data
 
         room = Room(roomname=rname, public=form.pub_listed.data)
-            if form.password.data is not "":
+        if form.password.data is not "":
             room.set_password(form.password.data)
 
         room.users.append(current_user)
