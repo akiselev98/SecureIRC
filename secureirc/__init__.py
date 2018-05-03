@@ -16,7 +16,7 @@ login.login_view = 'login'
 
 app.config.from_object(Config)
 db = SQLAlchemy(app)
-sslify = SSLify(app)
+#sslify = SSLify(app)
 migrate = Migrate(app,db)
 
 app.config['SECRET_KEY'] = 'aGVsbG8gZGFya25lc3MgbXkgb2xkIGZyaWVuZAo='
@@ -27,8 +27,8 @@ app.host = '0.0.0.0'
 
 bootstrap = Bootstrap(app)
 Session(app)
-socketio = SocketIO(app, manage_session=False)
-socketio.init_app(app, log_output=True)
+socketio = SocketIO(app, engineio_logger=True, manage_session=False)
+socketio.init_app(app)
 
 if __name__ == "__main__":
     app.run(ssl_context=('cert.pem', 'key.pem'))

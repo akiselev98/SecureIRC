@@ -18,7 +18,7 @@ var myStorage = window.localStorage;
 var key;
 var userlist;
 $(document).ready(function(){
-    socket = io.connect('https://' + document.domain + ':' + location.port + '/chat');
+    socket = io.connect('//' + document.domain + ':' + location.port + '/chat');
     socket.on('connect', function() {
 	$('#chat').val('');
 	//username = prompt("Please enter a username.","");
@@ -34,6 +34,9 @@ $(document).ready(function(){
         socket.emit('joined', {"username": username, "key": publicKey, "id": keyid});
     //}
 
+    });
+    socket.on('reload', function(data) {
+	location.reload(true);
     });
     socket.on('status', function(data) {
         $('#chat').val($('#chat').val() + '<' + data.msg + '>\n');
@@ -79,6 +82,9 @@ $(document).ready(function(){
 	    var encryptedText = JSON.stringify(messageManifest);
             socket.emit('text', {msg: encryptedText});
         }
+    });
+    $( window ).unload(function() {
+	console.log("Disconnecting");socket.disconnect();
     });
 });
 

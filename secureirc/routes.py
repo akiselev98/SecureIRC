@@ -134,7 +134,7 @@ def chat():
 def chat_script():
     return render_template('chat.js')
 
-@app.route('/<room>/chat_script')
+@app.route('/<room>/chat.js')
 @login_required
 def chat_script_room(room):
     return render_template('chat.js', roomname=room)

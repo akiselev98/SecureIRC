@@ -18,6 +18,10 @@ def handle_message(message):
 
 def handle_joined(data):
     #session['username'] = data['username']
+    if current_user.room is None:
+        emit('reload', {})
+        #'/<roomname>/chat'
+        
     print("User joined: "
           + current_user.username
           + "(ID:"+data['id']+")",
