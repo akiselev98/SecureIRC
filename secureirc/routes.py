@@ -61,7 +61,8 @@ def create_room():
 def chat_room(roomname):
     room = Room.query.filter_by(roomname=roomname).first()
     if room is None:
-        abort(404)
+        flash('Room not found', 'danger')
+        return redirect('/', code=302)
     
     if current_user in room.users:
         return render_template('chat.html', room=roomname)
